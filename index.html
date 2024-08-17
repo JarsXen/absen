@@ -244,9 +244,8 @@
         // Event listener untuk link login admin
         document.getElementById('adminLoginLink').addEventListener('click', (e) => {
             e.preventDefault();
-            document.getElementById('mainCard').classList.add('hidden');
-            document.getElementById('registrationCard').classList.add('hidden');
             document.getElementById('adminLoginCard').classList.remove('hidden');
+            document.getElementById('mainCard').classList.add('hidden');
         });
 
         // Event listener untuk login admin
@@ -255,7 +254,7 @@
             const password = document.getElementById('adminPassword').value;
 
             if (username === 'admin' && password === 'password') {
-                showMessage('Login admin berhasil');
+                showMessage('Login berhasil. Selamat datang, Admin!');
                 document.getElementById('adminLoginCard').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
             } else {
@@ -263,24 +262,62 @@
             }
         });
 
-        // Event listener untuk logout
+        // Event listener untuk logout admin
         document.getElementById('logoutButton').addEventListener('click', () => {
+            showMessage('Anda telah logout.');
             document.getElementById('adminPanel').classList.add('hidden');
             document.getElementById('mainCard').classList.remove('hidden');
-            showMessage('Logout berhasil');
         });
 
-        // Fungsi untuk memperbarui copyright
-        function updateCopyright() {
-            const currentYear = new Date().getFullYear();
-            document.getElementById('copyright').textContent = `© Fajar Irwansah. Semua Hak Dilindungi ${currentYear}`;
+        // Menampilkan copyright dengan tahun saat ini
+        const currentYear = new Date().getFullYear();
+        document.getElementById('copyright').textContent = `© ${currentYear} Fajar Irwansah. Semua Hak Dilindungi`;
+
+        // Cek apakah browser mendukung Web NFC
+        if ('NDEFReader' in window) {
+            const ndef = new NDEFReader();
+
+            // Fungsi untuk mendeteksi kartu NFC
+            async function scanNFC() {
+                try {
+                    await ndef.scan();
+                    showMessage('Silahkan tap kartu Anda', false);
+
+                    ndef.onreading = event => {
+                        const ndefMessage = event.message;
+                        let record = ndefMessage.records[0];
+
+                        if (record.recordType === "text") {
+                            const decoder = new TextDecoder();
+                            const text = decoder.decode(record.data);
+
+                            // Menampilkan data dari kartu NFC
+                            showMessage(`Data NFC: ${text}`);
+
+                            // Logika untuk memproses data NFC lebih lanjut
+                            if (text === 'VALID_CARD_ID') {
+                                showMessage('Absen berhasil. Terima kasih!');
+                            } else {
+                                // Tampilkan form pendaftaran jika kartu belum terdaftar
+                                document.getElementById('mainCard').classList.add('hidden');
+                                document.getElementById('registrationCard').classList.remove('hidden');
+                            }
+                        } else {
+                            showMessage('Kartu tidak dikenali', true);
+                        }
+                    };
+
+                } catch (error) {
+                    showMessage('Gagal membaca NFC: ' + error, true);
+                }
+            }
+
+            // Panggil scanNFC saat halaman dimuat
+            scanNFC();
+
+        } else {
+            showMessage('NFC tidak didukung di browser ini', true);
         }
-
-        // Panggil fungsi updateCopyright saat halaman dimuat
-        updateCopyright();
-
-        // Perbarui copyright setiap detik (untuk memastikan perubahan tahun langsung terlihat)
-        setInterval(updateCopyright, 1000);
     </script>
 </body>
 </html>
