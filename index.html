@@ -237,14 +237,8 @@
                 document.getElementById('registrationCard').classList.add('hidden');
                 document.getElementById('mainCard').classList.remove('hidden');
             } else {
-                showMessage('Mohon lengkapi semua data', true);
+                showMessage('Nama lengkap dan NISN harus diisi', true);
             }
-        });
-
-        // Event listener untuk link login admin
-        document.getElementById('adminLoginLink').addEventListener('click', () => {
-            document.getElementById('adminLoginCard').classList.remove('hidden');
-            document.getElementById('mainCard').classList.add('hidden');
         });
 
         // Event listener untuk login admin
