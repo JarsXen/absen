@@ -172,7 +172,7 @@
     <div class="container">
         <div class="card" id="mainCard">
             <h2>Selamat Datang</h2>
-            <p>Silahkan tap kartu Anda untuk absen</p>
+            <p>Silahkan tap kartu NFC Anda untuk absen</p>
             <div id="nfcAnimation"></div>
         </div>
 
@@ -242,8 +242,7 @@
         });
 
         // Event listener untuk link login admin
-        document.getElementById('adminLoginLink').addEventListener('click', (e) => {
-            e.preventDefault();
+        document.getElementById('adminLoginLink').addEventListener('click', () => {
             document.getElementById('adminLoginCard').classList.remove('hidden');
             document.getElementById('mainCard').classList.add('hidden');
         });
@@ -271,7 +270,7 @@
 
         // Menampilkan copyright dengan tahun saat ini
         const currentYear = new Date().getFullYear();
-        document.getElementById('copyright').textContent = `© ${currentYear} SMA Negeri 95 Jakarta`;
+        document.getElementById('copyright').textContent = `© ${currentYear} Sistem Absensi Siswa NFC`;
 
         // Cek apakah browser mendukung Web NFC
         if ('NDEFReader' in window) {
@@ -295,7 +294,7 @@
                             showMessage(`Data NFC: ${text}`);
 
                             // Logika untuk memproses data NFC lebih lanjut
-                            if (text === 'VALID_CARD_ID') {
+                            if (text === '7546 0000 0091 5567') {
                                 showMessage('Absen berhasil. Terima kasih!');
                             } else {
                                 // Tampilkan form pendaftaran jika kartu belum terdaftar
@@ -308,7 +307,11 @@
                     };
 
                 } catch (error) {
-                    showMessage('Gagal membaca NFC: ' + error, true);
+                    if (error.name === 'NotAllowedError') {
+                        showMessage('Izinkan NFC pada situs ini untuk melanjutkan', true);
+                    } else {
+                        showMessage('Gagal membaca NFC: ' + error.message, true);
+                    }
                 }
             }
 
