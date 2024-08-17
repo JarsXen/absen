@@ -123,6 +123,7 @@
             border: 3px solid var(--primary-color);
             border-radius: 50%;
             animation: pulse 2s infinite;
+            cursor: pointer; /* Tambahkan cursor pointer untuk klik simulasi */
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -165,14 +166,14 @@
 </head>
 <body>
     <header>
-        <h1>Sistem Absensi Siswa NFC</h1>
+        <h1>Sistem Absensi Siswa</h1>
         <a href="#" class="admin-login" id="adminLoginLink">Login</a>
     </header>
 
     <div class="container">
         <div class="card" id="mainCard">
             <h2>Selamat Datang</h2>
-            <p>Silahkan tap kartu NFC Anda untuk absen</p>
+            <p>Silahkan tap kartu Anda untuk absen</p>
             <div id="nfcAnimation"></div>
         </div>
 
@@ -242,85 +243,72 @@
         });
 
         // Event listener untuk link login admin
-        document.getElementById('adminLoginLink').addEventListener('click', () => {
-            document.getElementById('adminLoginCard').classList.remove('hidden');
+        document.getElementById('adminLoginLink').addEventListener('click', (e) => {
+            e.preventDefault();
             document.getElementById('mainCard').classList.add('hidden');
+            document.getElementById('adminLoginCard').classList.remove('hidden');
         });
 
-        // Event listener untuk login admin
+        // Event listener untuk tombol login admin
         document.getElementById('loginButton').addEventListener('click', () => {
             const username = document.getElementById('adminUsername').value;
             const password = document.getElementById('adminPassword').value;
 
             if (username === 'admin' && password === 'password') {
-                showMessage('Login berhasil. Selamat datang, Admin!');
                 document.getElementById('adminLoginCard').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
+                showMessage('Login berhasil');
             } else {
                 showMessage('Username atau password salah', true);
             }
         });
 
-        // Event listener untuk logout admin
+        // Event listener untuk tombol logout admin
         document.getElementById('logoutButton').addEventListener('click', () => {
-            showMessage('Anda telah logout.');
             document.getElementById('adminPanel').classList.add('hidden');
             document.getElementById('mainCard').classList.remove('hidden');
+            showMessage('Logout berhasil');
         });
 
-        // Menampilkan copyright dengan tahun saat ini
-        const currentYear = new Date().getFullYear();
-        document.getElementById('copyright').textContent = `© ${currentYear} Sistem Absensi Siswa NFC`;
+        // Simulasi NFC dengan klik
+        document.getElementById('nfcAnimation').addEventListener('click', () => {
+            // Contoh simulasi data dari kartu NFC
+            const simulatedNFCData = 'VALID_CARD_ID';
 
-        // Cek apakah browser mendukung Web NFC
-        if ('NDEFReader' in window) {
-            const ndef = new NDEFReader();
-
-            // Fungsi untuk mendeteksi kartu NFC
-            async function scanNFC() {
-                try {
-                    await ndef.scan();
-                    showMessage('Silahkan tap kartu NFC Anda', false);
-
-                    ndef.onreading = event => {
-                        const ndefMessage = event.message;
-                        let record = ndefMessage.records[0];
-
-                        if (record.recordType === "text") {
-                            const decoder = new TextDecoder();
-                            const text = decoder.decode(record.data);
-
-                            // Menampilkan data dari kartu NFC
-                            showMessage(`Data NFC: ${text}`);
-
-                            // Logika untuk memproses data NFC lebih lanjut
-                            if (text === '7546 0000 0091 5567') {
-                                showMessage('Absen berhasil. Terima kasih!');
-                            } else {
-                                // Tampilkan form pendaftaran jika kartu belum terdaftar
-                                document.getElementById('mainCard').classList.add('hidden');
-                                document.getElementById('registrationCard').classList.remove('hidden');
-                            }
-                        } else {
-                            showMessage('Kartu tidak dikenali', true);
-                        }
-                    };
-
-                } catch (error) {
-                    if (error.name === 'NotAllowedError') {
-                        showMessage('Izinkan NFC pada situs ini untuk melanjutkan', true);
-                    } else {
-                        showMessage('Gagal membaca NFC: ' + error.message, true);
-                    }
-                }
+            if (simulatedNFCData === 'VALID_CARD_ID') {
+                showMessage('Absen berhasil. Terima kasih!');
+            } else {
+                // Tampilkan form pendaftaran jika kartu belum terdaftar
+                document.getElementById('mainCard').classList.add('hidden');
+                document.getElementById('registrationCard').classList.remove('hidden');
             }
+        });
 
-            // Panggil scanNFC saat halaman dimuat
-            scanNFC();
+        // Set copyright tahun berjalan
+        document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} Sistem Absensi Siswa NFC`;
 
-        } else {
-            showMessage('NFC tidak didukung di browser ini', true);
+        // Fungsi untuk memulai scanning NFC (belum terimplementasi)
+        async function scanNFC() {
+            try {
+                const ndef = new NDEFReader();
+                await ndef.scan();
+                ndef.onreading = event => {
+                    const nfcData = event.serialNumber;
+                    if (nfcData === 'VALID_CARD_ID') {
+                        showMessage('Absen berhasil. Terima kasih!');
+                    } else {
+                        // Tampilkan form pendaftaran jika kartu belum terdaftar
+                        document.getElementById('mainCard').classList.add('hidden');
+                        document.getElementById('registrationCard').classList.remove('hidden');
+                    }
+                };
+            } catch (error) {
+                console.error('NFC tidak didukung di browser ini.', error);
+            }
         }
+        
+        // Panggil scanNFC() jika NFC sudah siap diimplementasikan
+        // scanNFC();
     </script>
 </body>
 </html>
