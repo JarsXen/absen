@@ -123,7 +123,6 @@
             border: 3px solid var(--primary-color);
             border-radius: 50%;
             animation: pulse 2s infinite;
-            cursor: pointer; /* Tambahkan cursor pointer untuk klik simulasi */
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -166,7 +165,7 @@
 </head>
 <body>
     <header>
-        <h1>Sistem Absensi Siswa</h1>
+        <h1>Sistem Absensi Siswa NFC</h1>
         <a href="#" class="admin-login" id="adminLoginLink">Login</a>
     </header>
 
@@ -270,24 +269,7 @@
             showMessage('Logout berhasil');
         });
 
-        // Simulasi NFC dengan klik
-        document.getElementById('nfcAnimation').addEventListener('click', () => {
-            // Contoh simulasi data dari kartu NFC
-            const simulatedNFCData = 'VALID_CARD_ID';
-
-            if (simulatedNFCData === 'VALID_CARD_ID') {
-                showMessage('Absen berhasil. Terima kasih!');
-            } else {
-                // Tampilkan form pendaftaran jika kartu belum terdaftar
-                document.getElementById('mainCard').classList.add('hidden');
-                document.getElementById('registrationCard').classList.remove('hidden');
-            }
-        });
-
-        // Set copyright tahun berjalan
-        document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} Sistem Absensi Siswa NFC`;
-
-        // Fungsi untuk memulai scanning NFC (belum terimplementasi)
+        // Fungsi untuk memulai scanning NFC
         async function scanNFC() {
             try {
                 const ndef = new NDEFReader();
@@ -304,11 +286,15 @@
                 };
             } catch (error) {
                 console.error('NFC tidak didukung di browser ini.', error);
+                showMessage('NFC tidak didukung di browser ini.', true);
             }
         }
         
-        // Panggil scanNFC() jika NFC sudah siap diimplementasikan
-        // scanNFC();
+        // Panggil scanNFC() untuk memulai scanning NFC saat halaman dimuat
+        scanNFC();
+
+        // Set copyright tahun berjalan
+        document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} Sistem Absensi Siswa NFC`;
     </script>
 </body>
 </html>
