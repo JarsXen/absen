@@ -174,6 +174,7 @@
             <h2>Selamat Datang</h2>
             <p>Silahkan tap kartu RFID Anda untuk absen</p>
             <div id="rfidAnimation"></div>
+            <input type="text" id="rfidInput" placeholder="Tap kartu RFID Anda" style="opacity: 0; position: absolute;">
         </div>
 
         <div class="card hidden" id="registrationCard">
@@ -184,6 +185,7 @@
             <input type="text" id="phoneNumber" placeholder="Nomor Telepon">
             <input type="email" id="email" placeholder="Email">
             <input type="password" id="password" placeholder="Password">
+            <input type="password" id="confirmPassword" placeholder="Konfirmasi Password">
             <input type="file" id="photo" accept="image/*">
             <button class="button" id="registerButton">Daftar</button>
         </div>
@@ -218,57 +220,110 @@
         <p id="copyright"></p>
     </footer>
 
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script>
-        function showMessage(message, isError = false) {
+        // Inisialisasi Firebase
+        var firebaseConfig = {
+            apiKey: "AIzaSyCAt18LzwFBfayx020gvkjjwx7DIPkS-D8",
+            authDomain: "absensi-sman95.firebaseapp.com",
+            databaseURL: "https://absensi-sman95-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "absensi-sman95",
+            storageBucket: "absensi-sman95.appspot.com",
+            messagingSenderId: "524060121406",
+            appId: "1:524060121406:web:70ef96d3c4546622e7b46f"
+        };
+        firebase.initializeApp(firebaseConfig);
+        var database = firebase.database();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const rfidInput = document.getElementById('rfidInput');
+            const registrationCard = document.getElementById('registrationCard');
+            const adminLoginLink = document.getElementById('adminLoginLink');
+            const adminLoginCard = document.getElementById('adminLoginCard');
+            const adminPanel = document.getElementById('adminPanel');
             const messageBox = document.getElementById('messageBox');
-            messageBox.textContent = message;
-            messageBox.className = `message ${isError ? 'error' : 'success'}`;
-            messageBox.classList.remove('hidden');
-            setTimeout(() => {
-                messageBox.classList.add('hidden');
-            }, 3000);
-        }
+            const attendanceTable = document.getElementById('attendanceTable').querySelector('tbody');
 
-        document.getElementById('registerButton').addEventListener('click', () => {
-            const fullName = document.getElementById('fullName').value;
-            const nisn = document.getElementById('nisn').value;
-            const phoneNumber = document.getElementById('phoneNumber').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const photo = document.getElementById('photo').files[0];
+            // Fokus input RFID
+            rfidInput.focus();
 
-            if (!fullName || !nisn || !phoneNumber || !email || !password || !photo) {
-                showMessage('Mohon isi semua data dengan benar!', true);
-                return;
+            // Event listener untuk input RFID
+            rfidInput.addEventListener('input', function (e) {
+                const rfid = e.target.value.trim();
+                if (rfid.length === 10) {
+                    checkRFIDRegistration(rfid);
+                    e.target.value = ''; // Reset input RFID
+                }
+            });
+
+            // Fungsi untuk memeriksa pendaftaran RFID
+            function checkRFIDRegistration(rfid) {
+                firebase.database().ref('users/' + rfid).once('value').then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const userData = snapshot.val();
+                        showMessage(`Absensi Berhasil: ${userData.fullName}`, 'success');
+                        addAttendance(userData.fullName, userData.nisn);
+                    } else {
+                        showMessage('Kartu tidak terdaftar. Silahkan daftar terlebih dahulu.', 'error');
+                        showRegistrationForm(rfid);
+                    }
+                }).catch((error) => {
+                    showMessage(`Error: ${error.message}`, 'error');
+                });
             }
-            showMessage('Pendaftaran berhasil!');
-        });
 
-        document.getElementById('adminLoginLink').addEventListener('click', () => {
-            document.getElementById('mainCard').classList.add('hidden');
-            document.getElementById('adminLoginCard').classList.remove('hidden');
-        });
-
-        document.getElementById('loginButton').addEventListener('click', () => {
-            const username = document.getElementById('adminUsername').value;
-            const password = document.getElementById('adminPassword').value;
-
-            if (username === 'admin' && password === 'admin123') {
-                document.getElementById('adminLoginCard').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
-                showMessage('Login berhasil!');
-            } else {
-                showMessage('Username atau password salah!', true);
+            // Fungsi untuk menampilkan form pendaftaran
+            function showRegistrationForm(rfid) {
+                registrationCard.classList.remove('hidden');
+                rfidInput.blur(); // Hilangkan fokus dari input RFID
             }
-        });
 
-        document.getElementById('logoutButton').addEventListener('click', () => {
-            document.getElementById('adminPanel').classList.add('hidden');
-            document.getElementById('mainCard').classList.remove('hidden');
-            showMessage('Logout berhasil!');
-        });
+            // Fungsi untuk menambahkan data absensi ke tabel
+            function addAttendance(name, nisn) {
+                const row = document.createElement('tr');
+                const date = new Date().toLocaleString();
+                row.innerHTML = `<td>${name}</td><td>${nisn}</td><td>${date}</td>`;
+                attendanceTable.appendChild(row);
+            }
 
-        document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} Sistem Absensi Siswa RFID`;
+            // Fungsi untuk menampilkan pesan
+            function showMessage(message, type) {
+                messageBox.innerText = message;
+                messageBox.className = `message ${type}`;
+                messageBox.classList.remove('hidden');
+                setTimeout(() => {
+                    messageBox.classList.add('hidden');
+                }, 3000);
+            }
+
+            // Klik link admin login
+            adminLoginLink.addEventListener('click', function () {
+                adminLoginCard.classList.toggle('hidden');
+            });
+
+            // Tombol login admin
+            document.getElementById('loginButton').addEventListener('click', function () {
+                const username = document.getElementById('adminUsername').value;
+                const password = document.getElementById('adminPassword').value;
+                if (username === 'admin' && password === 'admin') {
+                    adminLoginCard.classList.add('hidden');
+                    adminPanel.classList.remove('hidden');
+                } else {
+                    showMessage('Username atau password salah!', 'error');
+                }
+            });
+
+            // Tombol logout admin
+            document.getElementById('logoutButton').addEventListener('click', function () {
+                adminPanel.classList.add('hidden');
+                adminLoginCard.classList.remove('hidden');
+            });
+
+            // Set copyright footer
+            document.getElementById('copyright').innerText = `© ${new Date().getFullYear()} SMAN 95 Jakarta`;
+
+        });
     </script>
 </body>
 </html>
