@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Absensi Siswa NFC</title>
+    <title>Sistem Absensi Siswa RFID</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
@@ -116,7 +116,7 @@
             background-color: #f8d7da;
             color: #721c24;
         }
-        #nfcAnimation {
+        #rfidAnimation {
             width: 100px;
             height: 100px;
             margin: 20px auto;
@@ -165,15 +165,15 @@
 </head>
 <body>
     <header>
-        <h1>Sistem Absensi Siswa NFC</h1>
+        <h1>Sistem Absensi SMAN 95 Jakarta</h1>
         <a href="#" class="admin-login" id="adminLoginLink">Login</a>
     </header>
 
     <div class="container">
         <div class="card" id="mainCard">
             <h2>Selamat Datang</h2>
-            <p>Silahkan tap kartu Anda untuk absen</p>
-            <div id="nfcAnimation"></div>
+            <p>Silahkan tap kartu RFID Anda untuk absen</p>
+            <div id="rfidAnimation"></div>
         </div>
 
         <div class="card hidden" id="registrationCard">
@@ -181,6 +181,10 @@
             <p>Kartu Anda belum terdaftar. Silahkan daftar atau hubungi operator.</p>
             <input type="text" id="fullName" placeholder="Nama Lengkap">
             <input type="text" id="nisn" placeholder="NISN">
+            <input type="text" id="phoneNumber" placeholder="Nomor Telepon">
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Password">
+            <input type="file" id="photo" accept="image/*">
             <button class="button" id="registerButton">Daftar</button>
         </div>
 
@@ -202,7 +206,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Data absensi akan ditambahkan di sini -->
                 </tbody>
             </table>
             <button class="button" id="logoutButton" style="margin-top: 20px;">Logout</button>
@@ -216,7 +219,6 @@
     </footer>
 
     <script>
-        // Fungsi untuk menampilkan pesan
         function showMessage(message, isError = false) {
             const messageBox = document.getElementById('messageBox');
             messageBox.textContent = message;
@@ -227,74 +229,46 @@
             }, 3000);
         }
 
-        // Event listener untuk pendaftaran kartu
         document.getElementById('registerButton').addEventListener('click', () => {
             const fullName = document.getElementById('fullName').value;
             const nisn = document.getElementById('nisn').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const photo = document.getElementById('photo').files[0];
 
-            if (fullName && nisn) {
-                showMessage('Kartu berhasil didaftarkan. Silahkan tap ulang untuk absen.');
-                document.getElementById('registrationCard').classList.add('hidden');
-                document.getElementById('mainCard').classList.remove('hidden');
-            } else {
-                showMessage('Mohon lengkapi semua data', true);
+            if (!fullName || !nisn || !phoneNumber || !email || !password || !photo) {
+                showMessage('Mohon isi semua data dengan benar!', true);
+                return;
             }
+            showMessage('Pendaftaran berhasil!');
         });
 
-        // Event listener untuk link login admin
-        document.getElementById('adminLoginLink').addEventListener('click', (e) => {
-            e.preventDefault();
+        document.getElementById('adminLoginLink').addEventListener('click', () => {
             document.getElementById('mainCard').classList.add('hidden');
             document.getElementById('adminLoginCard').classList.remove('hidden');
         });
 
-        // Event listener untuk tombol login admin
         document.getElementById('loginButton').addEventListener('click', () => {
             const username = document.getElementById('adminUsername').value;
             const password = document.getElementById('adminPassword').value;
 
-            if (username === 'admin' && password === 'password') {
+            if (username === 'admin' && password === 'admin123') {
                 document.getElementById('adminLoginCard').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
-                showMessage('Login berhasil');
+                showMessage('Login berhasil!');
             } else {
-                showMessage('Username atau password salah', true);
+                showMessage('Username atau password salah!', true);
             }
         });
 
-        // Event listener untuk tombol logout admin
         document.getElementById('logoutButton').addEventListener('click', () => {
             document.getElementById('adminPanel').classList.add('hidden');
             document.getElementById('mainCard').classList.remove('hidden');
-            showMessage('Logout berhasil');
+            showMessage('Logout berhasil!');
         });
 
-        // Fungsi untuk memulai scanning NFC
-        async function scanNFC() {
-            try {
-                const ndef = new NDEFReader();
-                await ndef.scan();
-                ndef.onreading = event => {
-                    const nfcData = event.serialNumber;
-                    if (nfcData === 'VALID_CARD_ID') {
-                        showMessage('Absen berhasil. Terima kasih!');
-                    } else {
-                        // Tampilkan form pendaftaran jika kartu belum terdaftar
-                        document.getElementById('mainCard').classList.add('hidden');
-                        document.getElementById('registrationCard').classList.remove('hidden');
-                    }
-                };
-            } catch (error) {
-                console.error('NFC tidak didukung di browser ini.', error);
-                showMessage('NFC tidak didukung di browser ini.', true);
-            }
-        }
-        
-        // Panggil scanNFC() untuk memulai scanning NFC saat halaman dimuat
-        scanNFC();
-
-        // Set copyright tahun berjalan
-        document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} Sistem Absensi Siswa NFC`;
+        document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} Sistem Absensi Siswa RFID`;
     </script>
 </body>
 </html>
