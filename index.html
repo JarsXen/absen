@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Absensi Siswa RFID</title>
+    <title>Sistem Absensi Siswa RFID - Tap RFID</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
         :root {
             --primary-color: #3498db;
@@ -166,7 +166,6 @@
 <body>
     <header>
         <h1>Sistem Absensi SMAN 95 Jakarta</h1>
-        <a href="#" class="admin-login" id="adminLoginLink">Login</a>
     </header>
 
     <div class="container">
@@ -177,48 +176,16 @@
             <input type="text" id="rfidInput" placeholder="Tap kartu RFID Anda" style="opacity: 0; position: absolute;">
         </div>
 
-        <div class="card hidden" id="registrationCard">
-            <h2>Pendaftaran Kartu</h2>
-            <p>Kartu Anda belum terdaftar. Silahkan daftar atau hubungi operator.</p>
-            <input type="text" id="fullName" placeholder="Nama Lengkap">
-            <input type="text" id="nisn" placeholder="NISN">
-            <input type="text" id="phoneNumber" placeholder="Nomor Telepon">
-            <input type="email" id="email" placeholder="Email">
-            <input type="password" id="password" placeholder="Password">
-            <input type="password" id="confirmPassword" placeholder="Konfirmasi Password">
-            <input type="file" id="photo" accept="image/*">
-            <button class="button" id="registerButton">Daftar</button>
-        </div>
-
-        <div class="card hidden" id="adminLoginCard">
-            <h2>Login Admin</h2>
-            <input type="text" id="adminUsername" placeholder="Username">
-            <input type="password" id="adminPassword" placeholder="Password">
-            <button class="button" id="loginButton">Login</button>
-        </div>
-
-        <div class="card hidden" id="adminPanel">
-            <h2>Panel Admin - Monitoring Absensi</h2>
-            <table id="attendanceTable">
-                <thead>
-                    <tr>
-                        <th>Nama</th>
-                        <th>NISN</th>
-                        <th>Waktu Absen</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            <button class="button" id="logoutButton" style="margin-top: 20px;">Logout</button>
+        <div class="card hidden" id="studentInfo">
+            <h2>Absensi Berhasil</h2>
+            <img id="studentPhoto" src="" alt="Foto Siswa" width="100" style="border-radius: 50%;">
+            <p><strong>Nama:</strong> <span id="studentName"></span></p>
+            <p><strong>NISN:</strong> <span id="studentNISN"></span></p>
+            <p><strong>Waktu:</strong> <span id="attendanceTime"></span></p>
         </div>
 
         <div id="messageBox" class="message hidden"></div>
     </div>
-
-    <footer>
-        <p id="copyright"></p>
-    </footer>
 
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
@@ -227,7 +194,7 @@
         var firebaseConfig = {
             apiKey: "AIzaSyCAt18LzwFBfayx020gvkjjwx7DIPkS-D8",
             authDomain: "absensi-sman95.firebaseapp.com",
-            databaseURL: "https://absensi-sman95-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            databaseURL: "https://absensi-sman95-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "absensi-sman95",
             storageBucket: "absensi-sman95.appspot.com",
             messagingSenderId: "524060121406",
@@ -238,12 +205,12 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const rfidInput = document.getElementById('rfidInput');
-            const registrationCard = document.getElementById('registrationCard');
-            const adminLoginLink = document.getElementById('adminLoginLink');
-            const adminLoginCard = document.getElementById('adminLoginCard');
-            const adminPanel = document.getElementById('adminPanel');
+            const studentInfo = document.getElementById('studentInfo');
             const messageBox = document.getElementById('messageBox');
-            const attendanceTable = document.getElementById('attendanceTable').querySelector('tbody');
+            const studentNameElement = document.getElementById('studentName');
+            const studentNISNElement = document.getElementById('studentNISN');
+            const attendanceTimeElement = document.getElementById('attendanceTime');
+            const studentPhotoElement = document.getElementById('studentPhoto');
 
             // Fokus input RFID
             rfidInput.focus();
@@ -262,29 +229,39 @@
                 firebase.database().ref('users/' + rfid).once('value').then((snapshot) => {
                     if (snapshot.exists()) {
                         const userData = snapshot.val();
-                        showMessage(`Absensi Berhasil: ${userData.fullName}`, 'success');
-                        addAttendance(userData.fullName, userData.nisn);
+                        processAttendance(userData, rfid);
                     } else {
-                        showMessage('Kartu tidak terdaftar. Silahkan daftar terlebih dahulu.', 'error');
-                        showRegistrationForm(rfid);
+                        window.location.href = `registration.html?rfid=${rfid}`;
                     }
                 }).catch((error) => {
                     showMessage(`Error: ${error.message}`, 'error');
                 });
             }
 
-            // Fungsi untuk menampilkan form pendaftaran
-            function showRegistrationForm(rfid) {
-                registrationCard.classList.remove('hidden');
-                rfidInput.blur(); // Hilangkan fokus dari input RFID
+            // Fungsi untuk memproses absensi
+            function processAttendance(userData, rfid) {
+                const attendanceRef = firebase.database().ref('attendance/' + rfid);
+                attendanceRef.once('value').then((snapshot) => {
+                    if (snapshot.exists() && snapshot.val().checkIn && !snapshot.val().checkOut) {
+                        // Proses absen pulang
+                        attendanceRef.update({ checkOut: new Date().toISOString() });
+                        showMessage(`Absensi Pulang Berhasil: ${userData.fullName}`, 'success');
+                    } else {
+                        // Proses absen masuk
+                        attendanceRef.set({ checkIn: new Date().toISOString() });
+                        showMessage(`Absensi Masuk Berhasil: ${userData.fullName}`, 'success');
+                    }
+                    displayStudentInfo(userData);
+                });
             }
 
-            // Fungsi untuk menambahkan data absensi ke tabel
-            function addAttendance(name, nisn) {
-                const row = document.createElement('tr');
-                const date = new Date().toLocaleString();
-                row.innerHTML = `<td>${name}</td><td>${nisn}</td><td>${date}</td>`;
-                attendanceTable.appendChild(row);
+            // Fungsi untuk menampilkan informasi siswa
+            function displayStudentInfo(userData) {
+                studentNameElement.textContent = userData.fullName;
+                studentNISNElement.textContent = userData.nisn;
+                attendanceTimeElement.textContent = new Date().toLocaleString();
+                studentPhotoElement.src = userData.photoURL || 'default-photo.png';
+                studentInfo.classList.remove('hidden');
             }
 
             // Fungsi untuk menampilkan pesan
@@ -296,33 +273,6 @@
                     messageBox.classList.add('hidden');
                 }, 3000);
             }
-
-            // Klik link admin login
-            adminLoginLink.addEventListener('click', function () {
-                adminLoginCard.classList.toggle('hidden');
-            });
-
-            // Tombol login admin
-            document.getElementById('loginButton').addEventListener('click', function () {
-                const username = document.getElementById('adminUsername').value;
-                const password = document.getElementById('adminPassword').value;
-                if (username === 'admin' && password === 'admin') {
-                    adminLoginCard.classList.add('hidden');
-                    adminPanel.classList.remove('hidden');
-                } else {
-                    showMessage('Username atau password salah!', 'error');
-                }
-            });
-
-            // Tombol logout admin
-            document.getElementById('logoutButton').addEventListener('click', function () {
-                adminPanel.classList.add('hidden');
-                adminLoginCard.classList.remove('hidden');
-            });
-
-            // Set copyright footer
-            document.getElementById('copyright').innerText = `© ${new Date().getFullYear()} SMAN 95 Jakarta`;
-
         });
     </script>
 </body>
