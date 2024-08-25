@@ -251,7 +251,7 @@ footer {
         };
         firebase.initializeApp(firebaseConfig);
 
-        let cardNumber; // Variable untuk menyimpan nomor RFID
+        let cardNumber; // Variabel untuk menyimpan nomor RFID
 
         const registrationCard = document.getElementById('registrationCard');
         const mainCard = document.getElementById('mainCard');
@@ -261,9 +261,14 @@ footer {
         const studentNameInfo = document.getElementById('studentNameInfo');
         const studentNISNInfo = document.getElementById('studentNISNInfo');
         const attendanceTime = document.getElementById('attendanceTime');
+        const registrationForm = document.getElementById('registrationForm');
+        const messageBox = document.getElementById('messageBox');
+        const studentPhotoInput = document.getElementById('studentPhoto');
+        const photoPreview = document.getElementById('photoPreview');
 
         rfidInput.focus();
 
+        // Menangani input RFID
         rfidInput.addEventListener('input', function(event) {
             cardNumber = event.target.value.trim(); // Simpan nomor RFID
             if (cardNumber) {
@@ -295,14 +300,11 @@ footer {
                         rfidInput.value = '';
                         rfidInput.blur(); // Supaya input RFID tidak aktif di halaman registrasi
                     }
+                }).catch(error => {
+                    showMessage('Terjadi kesalahan saat memproses RFID: ' + error.message, 'error');
                 });
             }
         });
-
-        const registrationForm = document.getElementById('registrationForm');
-        const messageBox = document.getElementById('messageBox');
-        const studentPhotoInput = document.getElementById('studentPhoto');
-        const photoPreview = document.getElementById('photoPreview');
 
         // Pratinjau Foto saat diunggah
         studentPhotoInput.addEventListener('change', function(event) {
@@ -318,6 +320,7 @@ footer {
             }
         });
 
+        // Menangani formulir pendaftaran
         registrationForm.addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -352,7 +355,7 @@ footer {
             const uploadTask = storageRef.put(studentPhotoFile);
 
             uploadTask.on('state_changed', null, function(error) {
-                showMessage('Gagal mengunggah foto!', 'error');
+                showMessage('Gagal mengunggah foto: ' + error.message, 'error');
             }, function() {
                 uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
                     firebase.database().ref('students/' + studentId).set({
@@ -372,8 +375,10 @@ footer {
                         mainCard.classList.remove('hidden');
                         rfidInput.focus();
                     }).catch(function(error) {
-                        showMessage('Gagal menyimpan data siswa!', 'error');
+                        showMessage('Gagal menyimpan data siswa: ' + error.message, 'error');
                     });
+                }).catch(error => {
+                    showMessage('Gagal mendapatkan URL foto: ' + error.message, 'error');
                 });
             });
         });
@@ -384,9 +389,5 @@ footer {
             messageBox.classList.remove('hidden');
         }
     </script>
-
-    <footer>
-        <p>&copy; 2024 Sistem Absensi SMAN 95 Jakarta</p>
-    </footer>
 </body>
 </html>
