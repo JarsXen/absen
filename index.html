@@ -5,212 +5,192 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Absensi Siswa RFID</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
-            --background-color: #ecf0f1;
-            --text-color: #2c3e50;
-        }
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2980b9;
+    --background-color: #ecf0f1;
+    --text-color: #2c3e50;
+}
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            flex: 1;
-        }
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    flex: 1;
+}
 
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-        h1 {
-            margin: 0;
-            animation: fadeIn 1s ease-out;
-        }
+h1 {
+    margin: 0;
+    animation: fadeIn 1s ease-out;
+}
 
-        .admin-login {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
+.admin-login {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
 
-        .admin-login:hover {
-            transform: translateY(-2px);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
+.admin-login:hover {
+    transform: translateY(-2px);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 
-        .card {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            animation: slideUp 0.5s ease-out;
-        }
+.card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    animation: slideUp 0.5s ease-out;
+}
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
 
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-        .button:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
+.button:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 
-        input {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
+input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
 
-        input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-        }
+input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
 
-        .hidden {
-            display: none;
-        }
+.hidden {
+    display: none;
+}
 
-        .message {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            animation: fadeIn 0.5s ease-out;
-        }
+.message {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
 
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-        }
+.success {
+    background-color: #d4edda;
+    color: #155724;
+}
 
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
 
-        #rfidAnimation {
-            width: 100px;
-            height: 100px;
-            margin: 20px auto;
-            border: 3px solid var(--primary-color);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
+#rfidAnimation {
+    width: 100px;
+    height: 100px;
+    margin: 20px auto;
+    border: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
 
-        .photo-preview img {
-            max-width: 100%;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
+.photo-preview img {
+    max-width: 100%;
+    border-radius: 5px;
+    margin-top: 10px;
+}
 
-        .id-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
-        .id-card img {
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
 
-        .id-card p {
-            margin: 5px 0;
-        }
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(52, 152, 219, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
 
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+th, td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
 
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(52, 152, 219, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
-        }
+th {
+    background-color: var(--primary-color);
+    color: white;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+tr:hover {
+    background-color: #f5f5f5;
+}
 
-        th, td {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        footer {
-            text-align: center;
-            padding: 10px 0;
-            background-color: var(--primary-color);
-            color: white;
-            font-size: 12px;
-        }
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 12px;
+}
     </style>
 </head>
 <body>
@@ -220,17 +200,9 @@
     </header>
 
     <div class="container">
-        <!-- Form Registrasi -->
         <div class="card hidden" id="registrationCard">
             <h2>Registrasi Siswa RFID</h2>
             <form id="registrationForm">
-                <input type="text" id="studentName" placeholder="Nama Lengkap" required>
-                <input type="text" id="studentNISN" placeholder="NISN" required>
-                <input type="tel" id="studentPhone" placeholder="Nomor Telepon" required>
-                <input type="email" id="studentEmail" placeholder="Email" required>
-                <input type="text" id="studentAddress" placeholder="Alamat" required>
-                <input type="password" id="studentPassword" placeholder="Kata Sandi" required>
-                <input type="password" id="studentConfirmPassword" placeholder="Konfirmasi Kata Sandi" required>
                 <input type="file" id="studentPhoto" accept="image/*" required>
                 <div class="photo-preview" id="photoPreview"></div>
                 <button type="submit" class="button">Daftar</button>
@@ -238,7 +210,6 @@
             <div id="messageBox" class="message hidden"></div>
         </div>
 
-        <!-- Halaman Utama Absensi RFID -->
         <div class="card" id="mainCard">
             <h2>Selamat Datang</h2>
             <p>Silahkan tap kartu RFID Anda untuk absen</p>
@@ -246,7 +217,6 @@
             <input type="text" id="rfidInput" placeholder="Tap kartu RFID Anda" style="opacity: 0; position: absolute;">
         </div>
 
-        <!-- Halaman Informasi Siswa -->
         <div class="card hidden id-card" id="studentInfo">
             <h2>Absensi Berhasil</h2>
             <img id="studentPhotoInfo" src="" alt="Foto Siswa" width="100" style="border-radius: 50%;">
@@ -256,123 +226,98 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.21.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.21.1/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.21.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js"></script>
     <script>
-        // Konfigurasi Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyCAt18LzwFBfayx020gvkjjwx7DIPkS-D8",
+            apiKey: "AIzaSyCAt18LzwFBfay...",
             authDomain: "absensi-sman95.firebaseapp.com",
             databaseURL: "https://absensi-sman95-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "absensi-sman95",
             storageBucket: "absensi-sman95.appspot.com",
-            messagingSenderId: "524060121406",
-            appId: "1:524060121406:web:70ef96d3c4546622e7b46f"
+            messagingSenderId: "290759711616",
+            appId: "1:290759711616:web:9df7cf37fdbf1bd8bc5278"
         };
-        firebase.initializeApp(firebaseConfig);
+        const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        const registrationForm = document.getElementById('registrationForm');
-        const messageBox = document.getElementById('messageBox');
-        const photoPreview = document.getElementById('photoPreview');
         const rfidInput = document.getElementById('rfidInput');
-        const studentInfo = document.getElementById('studentInfo');
-        const studentPhotoInfo = document.getElementById('studentPhotoInfo');
-        const studentNameInfo = document.getElementById('studentNameInfo');
-        const studentNISNInfo = document.getElementById('studentNISNInfo');
-        const attendanceTime = document.getElementById('attendanceTime');
         const registrationCard = document.getElementById('registrationCard');
         const mainCard = document.getElementById('mainCard');
+        const studentInfo = document.getElementById('studentInfo');
+        const messageBox = document.getElementById('messageBox');
+        const photoPreview = document.getElementById('photoPreview');
 
-        // Menampilkan preview foto
-        document.getElementById('studentPhoto').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    photoPreview.innerHTML = `<img src="${e.target.result}" alt="Preview Foto" />`;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+        let cardTapped = false;
 
-        registrationForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const studentName = document.getElementById('studentName').value;
-            const studentNISN = document.getElementById('studentNISN').value;
-            const studentPhone = document.getElementById('studentPhone').value;
-            const studentEmail = document.getElementById('studentEmail').value;
-            const studentAddress = document.getElementById('studentAddress').value;
-            const studentPassword = document.getElementById('studentPassword').value;
-            const studentConfirmPassword = document.getElementById('studentConfirmPassword').value;
-            const studentPhoto = document.getElementById('studentPhoto').files[0];
+        // Debug: Pastikan halaman menerima fokus pada input RFID
+        window.onload = () => {
+            console.log("Halaman dimuat, memberikan fokus pada input RFID.");
+            rfidInput.focus();
+        };
 
-            if (studentPassword !== studentConfirmPassword) {
-                messageBox.className = 'message error';
-                messageBox.textContent = 'Konfirmasi kata sandi tidak cocok.';
-                messageBox.classList.remove('hidden');
-                return;
-            }
+        // Fungsi untuk menangani input kartu RFID
+        rfidInput.addEventListener('input', async function () {
+            if (cardTapped) return; // Cegah multiple taps sebelum reset
+            cardTapped = true;
+            console.log("Kartu RFID di-scan.");
 
-            const newStudentRef = database.ref('students').push();
-            const studentData = {
-                name: studentName,
-                NISN: studentNISN,
-                phone: studentPhone,
-                email: studentEmail,
-                address: studentAddress,
-                photoURL: 'path/to/photo/' + studentPhoto.name // Ganti dengan path foto yang sesuai
-            };
+            const rfidNumber = rfidInput.value.trim();
+            console.log("RFID number:", rfidNumber);
+            rfidInput.value = ""; // Bersihkan input setelah digunakan
 
-            newStudentRef.set(studentData)
-                .then(() => {
-                    registrationCard.classList.add('hidden');
-                    messageBox.className = 'message success';
-                    messageBox.textContent = 'Registrasi berhasil!';
-                    messageBox.classList.remove('hidden');
-                    setTimeout(() => {
-                        messageBox.classList.add('hidden');
+            try {
+                const snapshot = await firebase.database().ref("rfid/" + rfidNumber).once("value");
+                console.log("Data dari Firebase:", snapshot.exists());
+
+                if (snapshot.exists()) {
+                    const studentData = snapshot.val();
+                    console.log("Data siswa ditemukan:", studentData);
+
+                    document.getElementById('studentNameInfo').textContent = studentData.name;
+                    document.getElementById('studentNISNInfo').textContent = studentData.nisn;
+                    document.getElementById('studentPhotoInfo').src = studentData.photo;
+                    document.getElementById('attendanceTime').textContent = new Date().toLocaleString();
+
+                    studentInfo.classList.remove('hidden');
+                    mainCard.classList.add('hidden');
+
+                    setTimeout(function () {
+                        studentInfo.classList.add('hidden');
+                        mainCard.classList.remove('hidden');
+                        cardTapped = false;
+                        rfidInput.focus(); // Fokus kembali pada input RFID
+                        console.log("Reset selesai, siap menerima kartu baru.");
                     }, 5000);
-                })
-                .catch(error => {
-                    messageBox.className = 'message error';
-                    messageBox.textContent = 'Terjadi kesalahan: ' + error.message;
-                    messageBox.classList.remove('hidden');
-                });
-        });
+                } else {
+                    console.log("Kartu belum terdaftar, mengalihkan ke halaman registrasi.");
+                    mainCard.classList.add('hidden');
+                    registrationCard.classList.remove('hidden');
+                    messageBox.classList.add('hidden');
+                    cardTapped = false; // Reset cardTapped untuk registrasi
 
-        rfidInput.addEventListener('input', function() {
-            const rfidValue = rfidInput.value;
-            if (rfidValue) {
-                // Simulasi cek RFID di Firebase
-                database.ref('students').orderByChild('NISN').equalTo(rfidValue).once('value', function(snapshot) {
-                    if (snapshot.exists()) {
-                        const student = snapshot.val();
-                        const studentId = Object.keys(student)[0];
-                        const studentData = student[studentId];
-                        studentPhotoInfo.src = studentData.photoURL;
-                        studentNameInfo.textContent = studentData.name;
-                        studentNISNInfo.textContent = studentData.NISN;
-                        attendanceTime.textContent = new Date().toLocaleString();
-                        mainCard.classList.add('hidden');
-                        studentInfo.classList.remove('hidden');
-                        setTimeout(() => {
-                            studentInfo.classList.add('hidden');
-                            mainCard.classList.remove('hidden');
-                        }, 5000);
-                    } else {
-                        messageBox.className = 'message error';
-                        messageBox.textContent = 'Kartu tidak terdaftar.';
-                        messageBox.classList.remove('hidden');
-                        setTimeout(() => {
-                            messageBox.classList.add('hidden');
-                        }, 5000);
-                    }
-                    rfidInput.value = ''; // Reset input RFID setelah diproses
-                });
+                    const studentPhotoInput = document.getElementById('studentPhoto');
+                    studentPhotoInput.addEventListener('change', function () {
+                        const file = studentPhotoInput.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                photoPreview.innerHTML = `<img src="${e.target.result}" alt="Foto Preview">`;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("Error reading RFID:", error);
+                cardTapped = false;
+                rfidInput.focus();
             }
         });
     </script>
+
+    <footer>
+        &copy; 2024 SMAN 95 Jakarta - Sistem Absensi RFID
+    </footer>
 </body>
 </html>
