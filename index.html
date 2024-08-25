@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Absensi Siswa RFID</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
     --primary-color: #3498db;
@@ -292,7 +292,7 @@ footer {
                             mainCard.classList.remove('hidden');
                             rfidInput.value = '';
                             rfidInput.focus();
-                        }, 3000);
+                        }, 5000); // Tampilkan absensi berhasil selama 5 detik
                     } else {
                         // Jika kartu belum terdaftar, tampilkan form registrasi
                         mainCard.classList.add('hidden');
