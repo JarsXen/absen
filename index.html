@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Absensi Siswa RFID - Tap RFID</title>
+    <title>Sistem Absensi Siswa RFID</title>
     <style>
-         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
         :root {
             --primary-color: #3498db;
             --secondary-color: #2980b9;
             --background-color: #ecf0f1;
             --text-color: #2c3e50;
         }
-        
+
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -24,24 +24,28 @@
             display: flex;
             flex-direction: column;
         }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             flex: 1;
         }
+
         header {
             background-color: var(--primary-color);
             color: white;
             padding: 20px 0;
             text-align: center;
             position: relative;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         h1 {
             margin: 0;
             animation: fadeIn 1s ease-out;
         }
+
         .admin-login {
             position: absolute;
             top: 20px;
@@ -51,23 +55,27 @@
             font-weight: 500;
             transition: all 0.3s ease;
         }
+
         .admin-login:hover {
             transform: translateY(-2px);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
+
         .card {
             background-color: white;
             border-radius: 10px;
             padding: 20px;
             margin-top: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             animation: slideUp 0.5s ease-out;
         }
+
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
+
         .button {
             display: inline-block;
             padding: 10px 20px;
@@ -79,11 +87,13 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         .button:hover {
             background-color: var(--secondary-color);
             transform: translateY(-2px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
+
         input {
             display: block;
             width: 100%;
@@ -94,13 +104,16 @@
             font-size: 16px;
             transition: all 0.3s ease;
         }
+
         input:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         }
+
         .hidden {
             display: none;
         }
+
         .message {
             margin-top: 20px;
             padding: 10px;
@@ -108,14 +121,17 @@
             text-align: center;
             animation: fadeIn 0.5s ease-out;
         }
+
         .success {
             background-color: #d4edda;
             color: #155724;
         }
+
         .error {
             background-color: #f8d7da;
             color: #721c24;
         }
+
         #rfidAnimation {
             width: 100px;
             height: 100px;
@@ -124,36 +140,50 @@
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
+
+        .photo-preview img {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+
         @keyframes pulse {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); }
             70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(52, 152, 219, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         th, td {
             text-align: left;
             padding: 12px;
             border-bottom: 1px solid #ddd;
         }
+
         th {
             background-color: var(--primary-color);
             color: white;
         }
+
         tr:hover {
             background-color: #f5f5f5;
         }
+
         footer {
             text-align: center;
             padding: 10px 0;
@@ -166,9 +196,29 @@
 <body>
     <header>
         <h1>Sistem Absensi SMAN 95 Jakarta</h1>
+        <a href="registration.html" class="admin-login">Admin Login</a>
     </header>
 
     <div class="container">
+        <!-- Form Registrasi -->
+        <div class="card hidden" id="registrationCard">
+            <h2>Registrasi Siswa RFID</h2>
+            <form id="registrationForm">
+                <input type="text" id="studentName" placeholder="Nama Lengkap" required>
+                <input type="text" id="studentNISN" placeholder="NISN" required>
+                <input type="tel" id="studentPhone" placeholder="Nomor Telepon" required>
+                <input type="email" id="studentEmail" placeholder="Email" required>
+                <input type="text" id="studentAddress" placeholder="Alamat" required>
+                <input type="password" id="studentPassword" placeholder="Kata Sandi" required>
+                <input type="password" id="studentConfirmPassword" placeholder="Konfirmasi Kata Sandi" required>
+                <input type="file" id="studentPhoto" accept="image/*" required>
+                <div class="photo-preview" id="photoPreview"></div>
+                <button type="submit" class="button">Daftar</button>
+            </form>
+            <div id="messageBox" class="message hidden"></div>
+        </div>
+
+        <!-- Halaman Utama Absensi RFID -->
         <div class="card" id="mainCard">
             <h2>Selamat Datang</h2>
             <p>Silahkan tap kartu RFID Anda untuk absen</p>
@@ -178,17 +228,16 @@
 
         <div class="card hidden" id="studentInfo">
             <h2>Absensi Berhasil</h2>
-            <img id="studentPhoto" src="" alt="Foto Siswa" width="100" style="border-radius: 50%;">
-            <p><strong>Nama:</strong> <span id="studentName"></span></p>
-            <p><strong>NISN:</strong> <span id="studentNISN"></span></p>
+            <img id="studentPhotoInfo" src="" alt="Foto Siswa" width="100" style="border-radius: 50%;">
+            <p><strong>Nama:</strong> <span id="studentNameInfo"></span></p>
+            <p><strong>NISN:</strong> <span id="studentNISNInfo"></span></p>
             <p><strong>Waktu:</strong> <span id="attendanceTime"></span></p>
         </div>
-
-        <div id="messageBox" class="message hidden"></div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
     <script>
         // Inisialisasi Firebase
         var firebaseConfig = {
@@ -197,83 +246,90 @@
             databaseURL: "https://absensi-sman95-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "absensi-sman95",
             storageBucket: "absensi-sman95.appspot.com",
-            messagingSenderId: "524060121406",
-            appId: "1:524060121406:web:70ef96d3c4546622e7b46f"
+            messagingSenderId: "290759711616",
+            appId: "1:290759711616:web:9df7cf37fdbf1bd8bc5278"
         };
         firebase.initializeApp(firebaseConfig);
-        var database = firebase.database();
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const rfidInput = document.getElementById('rfidInput');
-            const studentInfo = document.getElementById('studentInfo');
-            const messageBox = document.getElementById('messageBox');
-            const studentNameElement = document.getElementById('studentName');
-            const studentNISNElement = document.getElementById('studentNISN');
-            const attendanceTimeElement = document.getElementById('attendanceTime');
-            const studentPhotoElement = document.getElementById('studentPhoto');
+        const registrationForm = document.getElementById('registrationForm');
+        const messageBox = document.getElementById('messageBox');
+        const studentPhotoInput = document.getElementById('studentPhoto');
+        const photoPreview = document.getElementById('photoPreview');
 
-            // Fokus input RFID
-            rfidInput.focus();
-
-            // Event listener untuk input RFID
-            rfidInput.addEventListener('input', function (e) {
-                const rfid = e.target.value.trim();
-                if (rfid.length === 10) {
-                    checkRFIDRegistration(rfid);
-                    e.target.value = ''; // Reset input RFID
-                }
-            });
-
-            // Fungsi untuk memeriksa pendaftaran RFID
-            function checkRFIDRegistration(rfid) {
-                firebase.database().ref('users/' + rfid).once('value').then((snapshot) => {
-                    if (snapshot.exists()) {
-                        const userData = snapshot.val();
-                        processAttendance(userData, rfid);
-                    } else {
-                        window.location.href = `registration.html?rfid=${rfid}`;
-                    }
-                }).catch((error) => {
-                    showMessage(`Error: ${error.message}`, 'error');
-                });
-            }
-
-            // Fungsi untuk memproses absensi
-            function processAttendance(userData, rfid) {
-                const attendanceRef = firebase.database().ref('attendance/' + rfid);
-                attendanceRef.once('value').then((snapshot) => {
-                    if (snapshot.exists() && snapshot.val().checkIn && !snapshot.val().checkOut) {
-                        // Proses absen pulang
-                        attendanceRef.update({ checkOut: new Date().toISOString() });
-                        showMessage(`Absensi Pulang Berhasil: ${userData.fullName}`, 'success');
-                    } else {
-                        // Proses absen masuk
-                        attendanceRef.set({ checkIn: new Date().toISOString() });
-                        showMessage(`Absensi Masuk Berhasil: ${userData.fullName}`, 'success');
-                    }
-                    displayStudentInfo(userData);
-                });
-            }
-
-            // Fungsi untuk menampilkan informasi siswa
-            function displayStudentInfo(userData) {
-                studentNameElement.textContent = userData.fullName;
-                studentNISNElement.textContent = userData.nisn;
-                attendanceTimeElement.textContent = new Date().toLocaleString();
-                studentPhotoElement.src = userData.photoURL || 'default-photo.png';
-                studentInfo.classList.remove('hidden');
-            }
-
-            // Fungsi untuk menampilkan pesan
-            function showMessage(message, type) {
-                messageBox.innerText = message;
-                messageBox.className = `message ${type}`;
-                messageBox.classList.remove('hidden');
-                setTimeout(() => {
-                    messageBox.classList.add('hidden');
-                }, 3000);
+        // Pratinjau Foto saat diunggah
+        studentPhotoInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photoPreview.innerHTML = `<img src="${e.target.result}" alt="Pratinjau Foto">`;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                photoPreview.innerHTML = '';
             }
         });
+
+        registrationForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const studentName = document.getElementById('studentName').value;
+            const studentNISN = document.getElementById('studentNISN').value;
+            const studentPhone = document.getElementById('studentPhone').value;
+            const studentEmail = document.getElementById('studentEmail').value;
+            const studentAddress = document.getElementById('studentAddress').value;
+            const studentPassword = document.getElementById('studentPassword').value;
+            const studentConfirmPassword = document.getElementById('studentConfirmPassword').value;
+            const studentPhotoFile = studentPhotoInput.files[0];
+
+            if (studentPassword !== studentConfirmPassword) {
+                showMessage('Kata sandi tidak cocok!', 'error');
+                return;
+            }
+
+            if (!studentPhotoFile) {
+                showMessage('Harap unggah foto siswa!', 'error');
+                return;
+            }
+
+            // Upload data ke Firebase
+            const studentId = firebase.database().ref().child('students').push().key;
+
+            const storageRef = firebase.storage().ref().child(`photos/${studentId}`);
+            const uploadTask = storageRef.put(studentPhotoFile);
+
+            uploadTask.on('state_changed', null, function(error) {
+                showMessage('Gagal mengunggah foto!', 'error');
+            }, function() {
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                    firebase.database().ref('students/' + studentId).set({
+                        name: studentName,
+                        nisn: studentNISN,
+                        phone: studentPhone,
+                        email: studentEmail,
+                        address: studentAddress,
+                        password: studentPassword,
+                        photoURL: downloadURL
+                    }).then(function() {
+                        showMessage('Registrasi berhasil!', 'success');
+                        registrationForm.reset();
+                        photoPreview.innerHTML = '';
+                    }).catch(function(error) {
+                        showMessage('Gagal menyimpan data siswa!', 'error');
+                    });
+                });
+            });
+        });
+
+        function showMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.className = 'message ' + type;
+            messageBox.classList.remove('hidden');
+        }
     </script>
+
+    <footer>
+        <p>&copy; 2024 Sistem Absensi SMAN 95 Jakarta</p>
+    </footer>
 </body>
 </html>
